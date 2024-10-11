@@ -1,0 +1,9 @@
+apiVersion: apps.kubernats.ai/v1alpha1
+kind: JetStream
+metadata:
+  labels:
+    app.kubernetes.io/name: kubernats
+    app.kubernetes.io/managed-by: kustomize
+  name: jetstream-sample
+spec:
+  # TODO(user): Add fields here
