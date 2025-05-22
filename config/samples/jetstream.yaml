@@ -1,0 +1,17 @@
+apiVersion: apps.kubernats.ai/v1alpha1
+kind: JetStream
+metadata:
+  labels:
+    app.kubernetes.io/name: kubernats
+    app.kubernetes.io/managed-by: kustomize
+  name: jetstream-sample
+spec:
+  credentials: client-account-auth-secret
+  account: ClientAccount
+  domain: uat
+  config:
+    subjects:
+      - "blockchain.>"
+    replicas: 3
+    retention: limits
+

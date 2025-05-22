@@ -1,0 +1,23 @@
+# permissions for end users to view consumers.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: kubernats
+    app.kubernetes.io/managed-by: kustomize
+  name: consumer-viewer-role
+rules:
+- apiGroups:
+  - apps.kubernats.ai
+  resources:
+  - consumers
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps.kubernats.ai
+  resources:
+  - consumers/status
+  verbs:
+  - get

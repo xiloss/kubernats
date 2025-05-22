@@ -30,8 +30,8 @@ import (
 	appsv1alpha1 "github.com/xiloss/kubernats/api/v1alpha1"
 )
 
-var _ = Describe("JetStream Controller", func() {
-	Context("when reconciling a resource", func() {
+var _ = Describe("NATSAuthSecret Controller", func() {
+	Context("When reconciling a resource", func() {
 		const resourceName = "test-resource"
 
 		ctx := context.Background()
@@ -40,13 +40,13 @@ var _ = Describe("JetStream Controller", func() {
 			Name:      resourceName,
 			Namespace: "default", // TODO(user):Modify as needed
 		}
-		natsjetstream := &appsv1alpha1.JetStream{}
+		authsecret := &appsv1alpha1.AuthSecret{}
 
 		BeforeEach(func() {
-			By("creating the custom resource for the kind JetStream")
-			err := k8sClient.Get(ctx, typeNamespacedName, natsjetstream)
+			By("creating the custom resource for the Kind NATSAuthSecret")
+			err := k8sClient.Get(ctx, typeNamespacedName, authsecret)
 			if err != nil && errors.IsNotFound(err) {
-				resource := &appsv1alpha1.JetStream{
+				resource := &appsv1alpha1.AuthSecret{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      resourceName,
 						Namespace: "default",
@@ -59,19 +59,18 @@ var _ = Describe("JetStream Controller", func() {
 
 		AfterEach(func() {
 			// TODO(user): Cleanup logic after each test, like removing the resource instance.
-			resource := &appsv1alpha1.JetStream{}
+			resource := &appsv1alpha1.AuthSecret{}
 			err := k8sClient.Get(ctx, typeNamespacedName, resource)
 			Expect(err).NotTo(HaveOccurred())
 
-			By("cleanup the specific resource instance NATSJetStream")
+			By("cleanup the specific resource instance AuthSecret")
 			Expect(k8sClient.Delete(ctx, resource)).To(Succeed())
 		})
 		It("should successfully reconcile the resource", func() {
 			By("reconciling the created resource")
-			controllerReconciler := &JetStreamReconciler{
-				KubeClient: k8sClient,
-				Scheme:     k8sClient.Scheme(),
-				NATSClient: natsClient,
+			controllerReconciler := &AuthSecretReconciler{
+				Client: k8sClient,
+				Scheme: k8sClient.Scheme(),
 			}
 
 			_, err := controllerReconciler.Reconcile(ctx, reconcile.Request{

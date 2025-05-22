@@ -1,0 +1,23 @@
+# permissions for end users to view keyvaluestores.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: kubernats
+    app.kubernetes.io/managed-by: kustomize
+  name: keyvaluestore-viewer-role
+rules:
+- apiGroups:
+  - apps.kubernats.ai
+  resources:
+  - keyvaluestores
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps.kubernats.ai
+  resources:
+  - keyvaluestores/status
+  verbs:
+  - get

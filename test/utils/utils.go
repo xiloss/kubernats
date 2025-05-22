@@ -32,6 +32,10 @@ const (
 
 	certmanagerVersion = "v1.14.4"
 	certmanagerURLTmpl = "https://github.com/jetstack/cert-manager/releases/download/%s/cert-manager.yaml"
+
+	natsOperatorVersion = "v0.8.3"
+	natsOperatorPrereqs = "https://github.com/nats-io/nats-operator/releases/download/%s/00-prereqs.yaml"
+	natsOperatorDeploy  = "https://github.com/nats-io/nats-operator/releases/download/%s/10-deployment.yaml"
 )
 
 func warnError(err error) {
@@ -137,4 +141,72 @@ func GetProjectDir() (string, error) {
 	}
 	wd = strings.Replace(wd, "/test/e2e", "", -1)
 	return wd, nil
+}
+
+// InstallNATSOperator installs the NATS Operator along with prerequisites.
+func InstallNATSOperator() error {
+	prereqsUrl := fmt.Sprintf(natsOperatorPrereqs, natsOperatorVersion)
+	deployUrl := fmt.Sprintf(natsOperatorDeploy, natsOperatorVersion)
+	fmt.Fprintf(GinkgoWriter, "Installing NATS Operator\n")
+
+	// Install prerequisites
+	if err := applyManifest(prereqsUrl); err != nil {
+		return fmt.Errorf("failed to apply NATS Operator prerequisites: %v", err)
+	}
+
+	// Install NATS Operator deployment
+	if err := applyManifest(deployUrl); err != nil {
+		return fmt.Errorf("failed to apply NATS Operator deployment: %v", err)
+	}
+
+	fmt.Fprintf(GinkgoWriter, "NATS Operator installed successfully\n")
+	return nil
+}
+
+// UninstallNATSOperator uninstalls the NATS Operator.
+func UninstallNATSOperator() {
+	prereqsUrl := fmt.Sprintf(natsOperatorPrereqs, natsOperatorVersion)
+	deployUrl := fmt.Sprintf(natsOperatorDeploy, natsOperatorVersion)
+
+	fmt.Fprintf(GinkgoWriter, "Uninstalling NATS Operator\n")
+
+	// Uninstall NATS Operator deployment
+	if err := deleteManifest(deployUrl); err != nil {
+		warnError(err)
+	}
+
+	// Uninstall prerequisites
+	if err := deleteManifest(prereqsUrl); err != nil {
+		warnError(err)
+	}
+
+	fmt.Fprintf(GinkgoWriter, "NATS Operator uninstalled successfully\n")
+}
+
+// applyManifest applies a Kubernetes manifest file.
+func applyManifest(url string) error {
+	cmd := exec.Command("kubectl", "apply", "-f", url)
+	_, err := Run(cmd)
+	return err
+}
+
+// deleteManifest deletes a Kubernetes manifest file.
+func deleteManifest(url string) error {
+	cmd := exec.Command("kubectl", "delete", "-f", url)
+	_, err := Run(cmd)
+	return err
+}
+
+// CreateKindCluster creates a Kind cluster
+func CreateKindCluster(name string) error {
+	cmd := exec.Command("kind", "create", "cluster", "--name", name)
+	_, err := Run(cmd)
+	return err
+}
+
+// DeleteKindCluster deletes a Kind cluster
+func DeleteKindCluster(name string) error {
+	cmd := exec.Command("kind", "delete", "cluster", "--name", name)
+	_, err := Run(cmd)
+	return err
 }

@@ -42,6 +42,7 @@ import (
 
 var cfg *rest.Config
 var k8sClient client.Client
+var natsClient *ClientImpl
 var testEnv *envtest.Environment
 var ctx context.Context
 var cancel context.CancelFunc

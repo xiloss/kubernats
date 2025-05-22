@@ -27,15 +27,24 @@ import (
 	"github.com/xiloss/kubernats/test/utils"
 )
 
-const namespace = "kubernats-system"
+const (
+	namespace       = "kubernats-system"
+	kindClusterName = "kubernats"
+)
 
 var _ = Describe("controller", Ordered, func() {
 	BeforeAll(func() {
+		By("creating Kind cluster")
+		Expect(utils.CreateKindCluster(kindClusterName)).To(Succeed())
+
 		By("installing prometheus operator")
 		Expect(utils.InstallPrometheusOperator()).To(Succeed())
 
 		By("installing the cert-manager")
 		Expect(utils.InstallCertManager()).To(Succeed())
+
+		By("installing Nats operator")
+		Expect(utils.InstallNATSOperator()).To(Succeed())
 
 		By("creating manager namespace")
 		cmd := exec.Command("kubectl", "create", "ns", namespace)
@@ -49,9 +58,15 @@ var _ = Describe("controller", Ordered, func() {
 		By("uninstalling the cert-manager bundle")
 		utils.UninstallCertManager()
 
+		By("uninstalling the Nats operator bundle")
+		utils.UninstallNATSOperator()
+
 		By("removing manager namespace")
 		cmd := exec.Command("kubectl", "delete", "ns", namespace)
 		_, _ = utils.Run(cmd)
+
+		By("deleting Kind cluster")
+		utils.DeleteKindCluster(kindClusterName)
 	})
 
 	Context("Operator", func() {
@@ -60,7 +75,8 @@ var _ = Describe("controller", Ordered, func() {
 			var err error
 
 			// projectimage stores the name of the image used in the example
-			var projectimage = "example.com/kubernats:v0.0.1"
+			// remember to build it as a tagged image with the domain
+			var projectimage = "kubernats.ai/kubernats:v0.0.1"
 
 			By("building the manager(Operator) image")
 			cmd := exec.Command("make", "docker-build", fmt.Sprintf("IMG=%s", projectimage))

@@ -1,4 +1,7 @@
 ## Append samples of your project ##
 resources:
-- apps_v1alpha1_jetstream.yaml
+- jetstream.yaml
+- authsecret.yaml
+- apps_v1alpha1_consumer.yaml
+- apps_v1alpha1_keyvaluestore.yaml
 # +kubebuilder:scaffold:manifestskustomizesamples

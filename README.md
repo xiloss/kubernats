@@ -56,12 +56,34 @@ kubebuilder init \
   --plugins go/v4
 ```
 
-#### Creating the jetstream API
+#### Creating the JetStream API
 
 ```bash
-# Create Kubebuilder api for kind webapp
+# Create Kubebuilder api for kind JetStream
 # using yes we will not be asked for confirmation, creating the resources in unattended mode
 yes | kubebuilder create api --group apps --version v1alpha1 --kind JetStream
 ```
 
+#### Creating the AuthSecret API
 
+```bash
+# Create Kubebuilder api for kind AuthSecret
+# using yes we will not be asked for confirmation, creating the resources in unattended mode
+yes | kubebuilder create api --group apps --version v1alpha1 --kind AuthSecret
+```
+
+#### Creating the Consumer API
+
+```bash
+# Create Kubebuilder api for kind Consumer
+# using yes we will not be asked for confirmation, creating the resources in unattended mode
+yes | kubebuilder create api --group apps --version v1alpha1 --kind Consumer
+```
+
+#### Creating the KeyValue Store API
+
+```bash
+# Create Kubebuilder api for kind KeyValueStore
+# using yes we will not be asked for confirmation, creating the resources in unattended mode
+yes | kubebuilder create api --group apps --version v1alpha1 --kind KeyValueStore
+```
