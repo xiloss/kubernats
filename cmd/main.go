@@ -145,10 +145,31 @@ func main() {
 	}
 
 	if err = (&controller.JetStreamReconciler{
+		KubeClient: mgr.GetClient(),
+		Scheme:     mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "JetStream")
+		os.Exit(1)
+	}
+	if err = (&controller.AuthSecretReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "JetStream")
+		setupLog.Error(err, "unable to create controller", "controller", "AuthSecret")
+		os.Exit(1)
+	}
+	if err = (&controller.ConsumerReconciler{
+		KubeClient: mgr.GetClient(),
+		Scheme:     mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "Consumer")
+		os.Exit(1)
+	}
+	if err = (&controller.KeyValueStoreReconciler{
+		KubeClient: mgr.GetClient(),
+		Scheme:     mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeyValueStore")
 		os.Exit(1)
 	}
 	// +kubebuilder:scaffold:builder

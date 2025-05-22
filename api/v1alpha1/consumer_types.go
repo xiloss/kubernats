@@ -23,53 +23,49 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-type JetStreamConfig struct {
-	Subjects  []string `json:"subjects,omitempty"`
-	Replicas  int      `json:"replicas,omitempty"`
-	Retention string   `json:"retention,omitempty"`
-}
-
-// JetStreamSpec defines the desired state of JetStream
-type JetStreamSpec struct {
+// ConsumerSpec defines the desired state of Consumer
+type ConsumerSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-	Credentials string          `json:"credentials,omitempty"`
-	Account     string          `json:"account,omitempty"`
-	Domain      string          `json:"domain,omitempty"`
-	Config      JetStreamConfig `json:"config,omitempty"`
+	Stream     string `json:"stream"`
+	Domain     string `json:"domain"`
+	Durable    string `json:"durable"`
+	AckPolicy  string `json:"ack-policy"`
+	Filter     string `json:"filter"`
+	MaxDeliver int    `json:"max-deliver"`
 }
 
-// JetStreamStatus defines the observed state of JetStream
-type JetStreamStatus struct {
+// ConsumerStatus defines the observed state of Consumer
+type ConsumerStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-	ConfigApplied bool        `json:"config-applied,omitempty"`
-	ErrorMessage  string      `json:"error-message,omitempty"`
-	LastUpdated   metav1.Time `json:"last-updated,omitempty"`
+	ConsumerCreated bool        `json:"consumer-created"`
+	ErrorMessage    string      `json:"error-message,omitempty"`
+	LastUpdated     metav1.Time `json:"last-updated,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 
-// JetStream is the Schema for the jetstreams API
-type JetStream struct {
+// Consumer is the Schema for the consumers API
+type Consumer struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   JetStreamSpec   `json:"spec,omitempty"`
-	Status JetStreamStatus `json:"status,omitempty"`
+	Spec   ConsumerSpec   `json:"spec,omitempty"`
+	Status ConsumerStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// JetStreamList contains a list of JetStream
-type JetStreamList struct {
+// ConsumerList contains a list of Consumer
+type ConsumerList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []JetStream `json:"items"`
+	Items           []Consumer `json:"items"`
 }
 
 // init initializes the schema
 func init() {
-	SchemeBuilder.Register(&JetStream{}, &JetStreamList{})
+	SchemeBuilder.Register(&Consumer{}, &ConsumerList{})
 }

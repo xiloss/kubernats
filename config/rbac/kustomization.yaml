@@ -22,6 +22,12 @@ resources:
 # default, aiding admins in cluster management. Those roles are
 # not used by the Project itself. You can comment the following lines
 # if you do not want those helpers be installed with your Project.
+- keyvaluestore_editor_role.yaml
+- keyvaluestore_viewer_role.yaml
+- consumer_editor_role.yaml
+- consumer_viewer_role.yaml
+- authsecret_editor_role.yaml
+- authsecret_viewer_role.yaml
 - jetstream_editor_role.yaml
 - jetstream_viewer_role.yaml
 

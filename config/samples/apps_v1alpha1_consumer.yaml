@@ -1,0 +1,9 @@
+apiVersion: apps.kubernats.ai/v1alpha1
+kind: Consumer
+metadata:
+  labels:
+    app.kubernetes.io/name: kubernats
+    app.kubernetes.io/managed-by: kustomize
+  name: consumer-sample
+spec:
+  # TODO(user): Add fields here

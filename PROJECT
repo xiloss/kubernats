@@ -17,4 +17,31 @@ resources:
   kind: JetStream
   path: github.com/xiloss/kubernats/api/v1alpha1
   version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: kubernats.ai
+  group: apps
+  kind: AuthSecret
+  path: github.com/xiloss/kubernats/api/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: kubernats.ai
+  group: apps
+  kind: Consumer
+  path: github.com/xiloss/kubernats/api/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: kubernats.ai
+  group: apps
+  kind: KeyValueStore
+  path: github.com/xiloss/kubernats/api/v1alpha1
+  version: v1alpha1
 version: "3"

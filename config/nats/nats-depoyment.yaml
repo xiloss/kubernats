@@ -1,0 +1,44 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nats-service
+  namespace: default
+spec:
+  ports:
+    - port: 4222
+      name: client
+  selector:
+    app: nats
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nats
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nats
+  template:
+    metadata:
+      labels:
+        app: nats
+    spec:
+      containers:
+        - name: nats
+          image: nats:latest
+          ports:
+            - containerPort: 4222
+              name: client
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/nats/nats-server.conf
+              subPath: nats-server.conf
+              readOnly: true
+          args: ["-c", "/etc/nats/nats-server.conf"]
+      volumes:
+        - name: config-volume
+          configMap:
+            name: nats-config
